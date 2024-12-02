@@ -11,6 +11,7 @@ fn main() {
 
     match args[1].as_str() {
         "day1" => advent::day1::run(),
+        "day2" => advent::day2::run(),
         _ => {
             eprintln!("Unknown exercise: {}", args[1]);
             std::process::exit(1);

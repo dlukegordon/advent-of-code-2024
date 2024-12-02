@@ -1,16 +1,18 @@
-use std::{fs, iter};
+use crate::get_data_filepath;
+use std::{fs, iter, path::Path};
 
-const INPUT_FILE: &str = "data/day1.txt";
+type List = Vec<i32>;
 
 pub fn run() {
-    let (vec1, vec2) = get_lists();
+    let data_filepath = get_data_filepath!();
+    let (vec1, vec2) = get_lists(&data_filepath);
     part1(&vec1, &vec2);
     part2(&vec1, &vec2);
 }
 
-fn get_lists() -> (Vec<i32>, Vec<i32>) {
-    let (vec1, vec2): (Vec<i32>, Vec<i32>) = fs::read_to_string(INPUT_FILE)
-        .unwrap()
+fn get_lists(data_filepath: &Path) -> (List, List) {
+    let data_string = fs::read_to_string(data_filepath).unwrap();
+    data_string
         .lines()
         .map(|line| {
             let mut parts = line.split_whitespace();
@@ -18,12 +20,10 @@ fn get_lists() -> (Vec<i32>, Vec<i32>) {
             let second = parts.next().unwrap().parse::<i32>().unwrap();
             (first, second)
         })
-        .unzip();
-
-    (vec1, vec2)
+        .unzip()
 }
 
-fn part1(vec1: &Vec<i32>, vec2: &Vec<i32>) {
+fn part1(vec1: &List, vec2: &List) {
     let mut vec1 = vec1.clone();
     let mut vec2 = vec2.clone();
     vec1.sort();
@@ -31,10 +31,10 @@ fn part1(vec1: &Vec<i32>, vec2: &Vec<i32>) {
 
     let answer: i32 = iter::zip(vec1, vec2).map(|(n1, n2)| (n1 - n2).abs()).sum();
 
-    println!("Part 1: {}", answer);
+    println!("Part 1: {answer}");
 }
 
-fn part2(vec1: &Vec<i32>, vec2: &Vec<i32>) {
+fn part2(vec1: &List, vec2: &List) {
     let answer: i32 = vec1
         .iter()
         .map(|n1| {
@@ -48,5 +48,5 @@ fn part2(vec1: &Vec<i32>, vec2: &Vec<i32>) {
         })
         .sum();
 
-    println!("Part 2: {}", answer);
+    println!("Part 2: {answer}");
 }
