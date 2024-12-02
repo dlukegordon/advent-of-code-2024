@@ -1,8 +1,8 @@
 use std::{fs, iter};
 
-const INPUT_FILE: &str = "input.txt";
+const INPUT_FILE: &str = "data/day1.txt";
 
-fn main() {
+pub fn run() {
     let (vec1, vec2) = get_lists();
     part1(&vec1, &vec2);
     part2(&vec1, &vec2);
@@ -31,7 +31,7 @@ fn part1(vec1: &Vec<i32>, vec2: &Vec<i32>) {
 
     let answer: i32 = iter::zip(vec1, vec2).map(|(n1, n2)| (n1 - n2).abs()).sum();
 
-    println!("{}", answer);
+    println!("Part 1: {}", answer);
 }
 
 fn part2(vec1: &Vec<i32>, vec2: &Vec<i32>) {
@@ -48,5 +48,5 @@ fn part2(vec1: &Vec<i32>, vec2: &Vec<i32>) {
         })
         .sum();
 
-    println!("{}", answer);
+    println!("Part 2: {}", answer);
 }
