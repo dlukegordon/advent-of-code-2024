@@ -9,7 +9,12 @@ type LevelDiffReports = Vec<LevelDiffReport>;
 pub fn run() {
     let data_filepath = get_data_filepath!();
     let levels = get_levels(&data_filepath);
-    part1(&levels);
+
+    let answer1 = part1(&levels);
+    println!("Part 1: {answer1}");
+
+    let answer2 = part2(&levels);
+    println!("Part 2: {answer2}");
 }
 
 fn get_levels(data_filepath: &Path) -> LevelReports {
@@ -25,9 +30,13 @@ fn get_levels(data_filepath: &Path) -> LevelReports {
 }
 
 fn levels_to_diffs(level_reports: &LevelReports) -> LevelDiffReports {
-    level_reports
-        .iter()
-        .map(|report| report.windows(2).map(|pair| pair[1] - pair[0]).collect())
+    level_reports.iter().map(|r| level_to_diff(r)).collect()
+}
+
+fn level_to_diff(level_report: &LevelReport) -> LevelDiffReport {
+    level_report
+        .windows(2)
+        .map(|pair| pair[1] - pair[0])
         .collect()
 }
 
@@ -49,42 +58,71 @@ fn all_in_safe_diff_range(diff_report: &LevelDiffReport) -> bool {
         .all(|d| safe_range_positive.contains(&d.abs()))
 }
 
-fn diff_report_is_safe(diff_report: &LevelDiffReport) -> bool {
+fn diff_report_is_safe_pt1(diff_report: &LevelDiffReport) -> bool {
     let aiod = all_increasing_or_decreasing(diff_report);
     let aisdr = all_in_safe_diff_range(diff_report);
     aiod && aisdr
 }
 
-fn num_safe_reports(diff_reports: &LevelDiffReports) -> usize {
+fn report_is_safe_pt1(report: &LevelReport) -> bool {
+    let diff = level_to_diff(report);
+    diff_report_is_safe_pt1(&diff)
+}
+
+fn report_is_safe_pt2(report: &LevelReport) -> bool {
+    if report_is_safe_pt1(report) {
+        return true;
+    }
+
+    for i in 0..report.len() {
+        let mut report = report.clone();
+        report.remove(i);
+        if report_is_safe_pt1(&report) {
+            return true;
+        }
+    }
+
+    false
+}
+
+fn part1(reports: &LevelReports) -> usize {
+    let diff_reports = levels_to_diffs(reports);
     diff_reports
         .iter()
-        .filter(|r| diff_report_is_safe(r))
+        .filter(|r| diff_report_is_safe_pt1(r))
         .count()
 }
 
-fn part1(reports: &LevelReports) {
-    let diff_reports = levels_to_diffs(reports);
-    let num_safe_reports = num_safe_reports(&diff_reports);
-    println!("Part 1: {num_safe_reports}");
+fn part2(reports: &LevelReports) -> usize {
+    reports.iter().filter(|r| report_is_safe_pt2(r)).count()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_sample_reports() {
-        let test_reports = vec![
+    fn get_test_reports() -> LevelReports {
+        vec![
             vec![7, 6, 4, 2, 1],
             vec![1, 2, 7, 8, 9],
             vec![9, 7, 6, 2, 1],
             vec![1, 3, 2, 4, 5],
             vec![8, 6, 4, 4, 1],
             vec![1, 3, 6, 7, 9],
-        ];
+        ]
+    }
 
-        let test_diffs = levels_to_diffs(&test_reports);
-        let num_safe_reports = num_safe_reports(&test_diffs);
-        assert_eq!(num_safe_reports, 2);
+    #[test]
+    fn test_part1() {
+        let test_reports = get_test_reports();
+        let answer = part1(&test_reports);
+        assert_eq!(answer, 2);
+    }
+
+    #[test]
+    fn test_part2() {
+        let test_reports = get_test_reports();
+        let answer = part2(&test_reports);
+        assert_eq!(answer, 4);
     }
 }
