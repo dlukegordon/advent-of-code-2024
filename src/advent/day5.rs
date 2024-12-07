@@ -1,6 +1,6 @@
 use crate::get_data_filepath;
 use std::{
-    collections::{HashMap, HashSet, VecDeque},
+    collections::{HashMap, HashSet},
     fs,
     path::Path,
 };
