@@ -17,6 +17,7 @@ fn main() {
         "day5" => advent::day5::run(),
         "day6" => advent::day6::run(),
         "day7" => advent::day7::run(),
+        "day8" => advent::day8::run(),
         _ => {
             eprintln!("Unknown exercise: {}", args[1]);
             std::process::exit(1);

@@ -250,14 +250,14 @@ fn part2((obstacles, (guard_y, guard_x), guard_dir): &Data) -> usize {
     let original_path =
         guard_walk(&(obstacles.clone(), (*guard_y, *guard_x), guard_dir.clone())).unwrap();
 
-    let num_in_path = original_path.len();
+    let _num_in_path = original_path.len();
 
     original_path
         .keys()
         .collect::<Vec<_>>()
         .par_iter()
         .enumerate()
-        .filter(|(i, (y, x))| {
+        .filter(|(_i, (y, x))| {
             // println!("trying {i}/{num_in_path} pos {:?}", (y, x));
 
             if obstacles[*y][*x] {
