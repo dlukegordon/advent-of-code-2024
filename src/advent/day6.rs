@@ -258,7 +258,7 @@ fn part2((obstacles, (guard_y, guard_x), guard_dir): &Data) -> usize {
         .par_iter()
         .enumerate()
         .filter(|(i, (y, x))| {
-            println!("trying {i}/{num_in_path} pos {:?}", (y, x));
+            // println!("trying {i}/{num_in_path} pos {:?}", (y, x));
 
             if obstacles[*y][*x] {
                 return false;
